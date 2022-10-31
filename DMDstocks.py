@@ -9,16 +9,10 @@ import matplotlib as mpl
 #%% Load data
 data = pd.read_csv('historical_stock_prices.csv')
 
-#%% Set parameters and reduce table size
-# Choose some dates
+#%% User inputs
+# Choose dates
 start_date = '2014-03-18'
 end_date = '2015-03-18'
-
-after_start_date = data['date'] >= start_date
-before_end_date = data['date'] <= end_date
-between_two_dates = after_start_date & before_end_date
-
-tabledates = data.loc[between_two_dates]
 
 # Choose tickers
 s1 = 'AEO'
@@ -29,6 +23,24 @@ s5 = 'SCVL'
 s6 = 'RL'
 s7 = 'URBN'
 s8 = 'ROST'
+
+# Number of past days to build the DMD model on
+mp = 7
+# Number of future days to predict with DMD
+mf = 1
+
+# Percentage of portfolio to sell off each day
+sell_perc = 0.25
+
+# Initial capital
+init_cap = 1e6
+
+#%% Set parameters and reduce table size
+after_start_date = data['date'] >= start_date
+before_end_date = data['date'] <= end_date
+between_two_dates = after_start_date & before_end_date
+
+tabledates = data.loc[between_two_dates]
 
 tickers = [s1,s2,s3,s4,s5,s6,s7,s8]
 portfolio_size = len(tickers)
@@ -51,20 +63,11 @@ for i in range(0,portfolio_size):
     bigX[i,:] = temp_price_vector
     
 #%% Initialise the trading
-# Number of past days to build the DMD model on
-mp = 7
-# Number of future days to predict with DMD
-mf = 1
-
-# Percentage of portfolio to sell off each day
-sell_perc = 0.25
-
 # Initialise at day 7, as DMD uses data on the previous 7 days to predict
 # the price on the following day
 current_day = 7
 
 # Initialise capital and date
-init_cap = 1e6
 init_each = 1e6/portfolio_size
 init_day = datetime.datetime.strptime(start_date,'%Y-%m-%d') + datetime.timedelta(days = (mp-1))
 
@@ -96,6 +99,7 @@ avreturnDMD = np.mean(returnDMD)
 returnSP = SP['close'][0:days-(mp+mf)] - 1e6
 avreturnSP = np.mean(returnSP)
 DMDperformance = avreturnDMD/avreturnSP
+print('DMD produces average returns of',round(DMDperformance,1),'times the S&P index.')
 
 #%% Plot
 axdates = pd.to_datetime(SP['date'][0:days-(mp+mf)],dayfirst=True)
