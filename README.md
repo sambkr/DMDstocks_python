@@ -16,9 +16,6 @@ The daily trading algorithm works as follows:
 * Stocks are treated as continuous quanitites.
 * The number of past days (the variable mp) used to predict one future day was chosen to be 7, based on the heatmaps presented in Mann and Kutz (2016). This paramter has yet to be optimised and applied to other sector types.
 
-## Getting Started
-data? 
-
 ## Contributor
 Samuel Baker
 samuel.baker@balliol.ox.ac.uk
