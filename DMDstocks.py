@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
-import matplotlib.dates as mdates
+import matplotlib as mpl
 
 #%% Load data
 data = pd.read_csv('historical_stock_prices.csv')
@@ -96,6 +96,18 @@ avreturnDMD = np.mean(returnDMD)
 returnSP = SP['close'][0:days-(mp+mf)] - 1e6
 avreturnSP = np.mean(returnSP)
 DMDperformance = avreturnDMD/avreturnSP
+
+#%% Plot
+axdates = pd.to_datetime(SP['date'][0:days-(mp+mf)],dayfirst=True)
+
+plt.figure()
+mpl.rc('font',family='Times New Roman')
+plt.plot(axdates,valuet[0,0:days-(mp+mf)]/1e6,linewidth=3,color="#0072BD")
+plt.plot(axdates,SP['close'][0:days-(mp+mf)]/1e6,linewidth=3,color="#7E2F8E")
+plt.ylabel('USD (millions)',fontsize=20)
+plt.legend(['DMD Algorithm','S&P Retail Index'],)
+plt.grid()
+plt.show()
 
 #%% Functions
 

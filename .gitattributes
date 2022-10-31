@@ -1,1 +1,2 @@
 historical_stock_prices.csv filter=lfs diff=lfs merge=lfs -text
+S&Pretail_reduced.csv filter=lfs diff=lfs merge=lfs -text
